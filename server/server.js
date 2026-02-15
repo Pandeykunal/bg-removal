@@ -6,10 +6,20 @@ import userRouter from './routes/userRoutes.js';
 
 const PORT = process.env.PORT || 4000
 const app = express();
+
 await connectDB()
 
-app.use(express.json())
 app.use(cors())
+
+// ✅ Webhook route FIRST (before express.json)
+app.post(
+  '/api/user/webhooks',
+  express.raw({ type: 'application/json' }),
+  userRouter
+)
+
+// Normal JSON middleware AFTER webhook
+app.use(express.json())
 
 app.get('/', (req,res) => res.send("API Working"))
 app.use('/api/user', userRouter)
