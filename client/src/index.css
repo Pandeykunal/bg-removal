@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+html,
+body {
+  background-color: rgb(24 24 27); /* zinc-900 */
+  color: rgb(226 232 240);         /* slate-200 */
+}
