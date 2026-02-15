@@ -11,14 +11,14 @@ await connectDB()
 
 app.use(cors())
 
-// ✅ Webhook route FIRST (before express.json)
-app.post(
+// ✅ Webhook route FIRST with raw body (FIXED)
+app.use(
   '/api/user/webhooks',
   express.raw({ type: 'application/json' }),
   userRouter
 )
 
-// Normal JSON middleware AFTER webhook
+// Normal JSON middleware for all other routes
 app.use(express.json())
 
 app.get('/', (req,res) => res.send("API Working"))
