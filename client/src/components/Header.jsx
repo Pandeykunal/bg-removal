@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 
 const Header = () => {
 
-  const { removeBG } = useContext(AppContext )
+  const { removeBG } = useContext(AppContext)
 
   return (
     <div className='flex items-center justify-between max-sm:flex-col-reverse gap-y-10 px-4 mt-10 lg:px-44 sm:mt-20'>
@@ -26,7 +26,14 @@ const Header = () => {
         </p>
 
         <div>
-          <input onChange={e => removeBG(e.target.files[0])} type="file" id="upload1" accept='image/*' hidden />
+          <input 
+            onChange={e => removeBG(e.target.files[0])} 
+            type="file" 
+            id="upload1" 
+            accept='image/*' 
+            hidden 
+          />
+          
           <label
             htmlFor='upload1'
             className='inline-flex gap-3 px-8 py-3.5 rounded-full cursor-pointer
@@ -44,10 +51,9 @@ const Header = () => {
 
       {/* -------- Right Side -------- */}
       <div className='w-full max-w-md relative'>
-        {/* Glowing background effect */}
+        
         <div className='absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 blur-3xl rounded-full'></div>
         
-        {/* Image with border and glow */}
         <img 
           src={assets.header_img} 
           alt="" 

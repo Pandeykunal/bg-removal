@@ -1,26 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext'
 
 const Result = () => {
 
   const navigate = useNavigate()
-  
-  const [image, setImage] = useState(null)
-  const [resultImage, setResultImage] = useState(null)
-  const [loading, setLoading] = useState(false)
+
+  const { image, resultImage, loading, removeBG } = useContext(AppContext)
 
   const handleImageUpload = (file) => {
     if (file) {
-      setImage(file)
-      setLoading(true)
-      
-      // Simulate background removal process
-      setTimeout(() => {
-        // For demo: use the same image or a placeholder
-        setResultImage(URL.createObjectURL(file))
-        setLoading(false)
-      }, 2000)
+      removeBG(file)
     }
   }
 
@@ -67,6 +57,7 @@ const Result = () => {
           <div className='flex flex-col'>
             <p className='font-semibold text-gray-100 mb-2'>Background Removed</p>
             <div className='rounded-md border border-green-500/30 h-full relative bg-layer shadow-md min-h-[320px] flex items-center justify-center'>
+              
               {resultImage ? (
                 <img src={resultImage} alt='Result' className='w-full' />
               ) : loading ? (
@@ -76,6 +67,7 @@ const Result = () => {
               ) : (
                 <p className='text-gray-500 text-sm'>Result will appear here</p>
               )}
+
             </div>
           </div>
 
@@ -85,10 +77,7 @@ const Result = () => {
         {resultImage && 
           <div className='flex justify-center sm:justify-end items-center flex-wrap gap-4 mt-6'>
             <button 
-              onClick={() => {
-                setImage(null)
-                setResultImage(null)
-              }} 
+              onClick={() => navigate('/')} 
               className='px-8 py-2.5 text-green-400 text-sm border border-green-500/50 rounded-full hover:scale-105 hover:bg-green-500/10 hover:border-green-400 transition-all duration-700'
             >
               Try another image

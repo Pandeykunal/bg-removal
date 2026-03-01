@@ -17,8 +17,14 @@ const authUser = async (req, res, next) => {
         // decoding JWT token
         const token_decode = jwt.decode(token)
 
-        // getting clerkId from decoded token
+        if (!token_decode || !token_decode.clerkId) {
+            return res.json({ success: false, message: 'Invalid Token' })
+        }
+
+        // ✅ Fixed: use req.body safely
+        req.body = req.body || {}
         req.body.clerkId = token_decode.clerkId
+        
         next()
 
     } catch (error) {

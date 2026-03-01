@@ -8,7 +8,6 @@ const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
-        // When using express.raw(), body is a Buffer - convert to string
         const bodyString = req.body.toString()
         
         const payload = whook.verify(bodyString, {
@@ -19,12 +18,12 @@ const clerkWebhooks = async (req, res) => {
 
         const { data, type } = payload
 
-        console.log('Webhook event received:', type) // Debug log
+        console.log('Webhook event received:', type)
 
         switch (type) {
 
             case 'user.created':
-                console.log('Creating user:', data.email_addresses[0].email_address) // Debug log
+                console.log('Creating user:', data.email_addresses[0].email_address)
                 const newUser = await userModel.create({
                     clerkId: data.id,
                     email: data.email_addresses[0].email_address,
@@ -32,11 +31,11 @@ const clerkWebhooks = async (req, res) => {
                     lastName: data.last_name,
                     photo: data.image_url,
                 })
-                console.log('User created successfully:', newUser._id) // Debug log
+                console.log('User created successfully:', newUser._id)
                 break;
 
             case 'user.updated':
-                console.log('Updating user:', data.id) // Debug log
+                console.log('Updating user:', data.id)
                 await userModel.findOneAndUpdate(
                     { clerkId: data.id },
                     {
@@ -46,13 +45,13 @@ const clerkWebhooks = async (req, res) => {
                         photo: data.image_url,
                     }
                 )
-                console.log('User updated successfully') // Debug log
+                console.log('User updated successfully')
                 break;
 
             case 'user.deleted':
-                console.log('Deleting user:', data.id) // Debug log
+                console.log('Deleting user:', data.id)
                 await userModel.findOneAndDelete({ clerkId: data.id })
-                console.log('User deleted successfully') // Debug log
+                console.log('User deleted successfully')
                 break;
         }
 
@@ -64,14 +63,26 @@ const clerkWebhooks = async (req, res) => {
     }
 }
 
+
 // API Controller function to get user available credits data
 const userCredits = async (req, res) => {
     try {
 
+        // ✅ Fixed: Get clerkId from req.body (set by authUser middleware)
         const { clerkId } = req.body
 
-        // Fetching userdata using ClerkId
+        if (!clerkId) {
+            return res.json({ success: false, message: "Unauthorized" })
+        }
+
+        // ✅ Find user
         const userData = await userModel.findOne({ clerkId })
+
+        // ✅ Handle user not found
+        if (!userData) {
+            return res.json({ success: false, message: "User not found" })
+        }
+
         res.json({ success: true, credits: userData.creditBalance })
 
     } catch (error) {
@@ -80,4 +91,4 @@ const userCredits = async (req, res) => {
     }
 }
 
-export {clerkWebhooks,  userCredits}
+export { clerkWebhooks, userCredits }

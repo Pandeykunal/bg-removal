@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 
@@ -8,7 +8,10 @@ const Upload = () => {
 
   const handleUpload = (file) => {
     console.log('Selected file:', file)
-    // later: send this file to backend
+    
+    if (file) {
+      removeBG(file)   // actually call your bg removal
+    }
   }
 
   return (
@@ -37,7 +40,9 @@ const Upload = () => {
                      transition-all duration-700'
         >
           <img width={20} src={assets.upload_btn_icon} alt="" />
-          <p className='text-black text-sm font-semibold'>Upload your image</p>
+          <p className='text-black text-sm font-semibold'>
+            Upload your image
+          </p>
         </label>
       </div>
     </div>

@@ -1,29 +1,34 @@
-import 'dotenv/config';
-import express from 'express'
-import cors from 'cors'
-import connectDB from './configs/mongodb.js';
-import userRouter from './routes/userRoutes.js';
-import imageRouter from './routes/imageRoutes.js';
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import connectDB from "./configs/mongodb.js";
+import userRouter from "./routes/userRoutes.js";
+import imageRouter from "./routes/imageRoutes.js";
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000;
 const app = express();
 
-await connectDB()
+await connectDB();
 
-app.use(cors())
+app.use(cors());
 
-// ✅ Webhook route FIRST with raw body (FIXED)
+// Webhook FIRST (raw body)
 app.use(
-  '/api/user/webhooks',
-  express.raw({ type: 'application/json' }),
+  "/api/user/webhooks",
+  express.raw({ type: "application/json" }),
   userRouter
-)
+);
 
-// Normal JSON middleware for all other routes
-app.use(express.json())
+// JSON middleware
+app.use(express.json());
 
-app.get('/', (req,res) => res.send("API Working"))
-app.use('/api/user', userRouter)
-app.use('/api/usetr', imageRouter)
+// Test route
+app.get("/", (req, res) => res.send("API Working"));
 
-app.listen(PORT, () => console.log('Server running on port ' + PORT));
+// Routes
+app.use("/api/user", userRouter);
+app.use("/api/image", imageRouter); // ✅ Correct path
+
+app.listen(PORT, () =>
+  console.log("Server running on port " + PORT)
+);
