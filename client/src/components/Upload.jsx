@@ -1,7 +1,10 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext'
 
 const Upload = () => {
+
+  const { removeBG } = useContext(AppContext)
 
   const handleUpload = (file) => {
     console.log('Selected file:', file)

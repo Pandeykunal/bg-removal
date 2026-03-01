@@ -2,15 +2,20 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
 
 const Navbar = () => {
 
     const { openSignIn } = useClerk()
     const { isSignedIn, user } = useUser()
+    const { credit, loadCreditsData } = useContext(AppContext)
     const navigate = useNavigate()
 
-    // Mock credit value - replace with your actual state management later
-    const credit = 0;
+     useEffect(() => {
+        if (isSignedIn) {
+            loadCreditsData()
+        }
+    }, [isSignedIn])
 
     return (
         <div className='flex items-center justify-between mx-4 py-3 lg:mx-44 border-b border-green-500/20'>
@@ -54,4 +59,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default Navbar 
